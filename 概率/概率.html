@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+window.onload = function () {
+	var oBtn = document.getElementsByTagName('button')[0];
+	var aSpan = document.getElementsByTagName('span');
+
+	var range = 1000;
+	var probability = [0.005 * range, 0.03 * range, 0.8 * range];
+	var _temp = 0;
+	var interval = [];
+	for (var i = 0; i < probability.length; i++) {
+		_temp += probability[i];
+		interval.push({count: 0, number: _temp});
+	}
+
+	oBtn.onclick = function () {
+		for (var i = 0; i < interval.length; i++) {
+			interval[i].count = 0;
+		}
+		var frequency = this.innerHTML;
+		var value = 0;
+		var sum = 0;
+		for (var i = 0; i < frequency; i++) {
+			value = Math.random() * range;
+			calc(value);
+		}
+		for (var i = 0; i < aSpan.length; i++) {
+			if (i == aSpan.length - 1) {
+				aSpan[i].innerHTML = frequency - sum;
+			} else {
+				aSpan[i].innerHTML = interval[i].count;
+				sum += interval[i].count;
+			}
+		}
+	};
+
+	function calc(value) {
+		for (var i = 0; i < interval.length; i++) {
+			if (interval[i].number > value) {
+				interval[i].count++;
+				break;
+			}
+		}
+	}
+
+};
+</script>
+</head>
+<body>
+<button>10000</button>
+<h1>一等奖：5‰，二等奖：3%，三等奖：80%，纪念奖（谢谢惠顾）</h1>
+<ul>
+	<li>一等奖：<span></span></li>
+	<li>二等奖：<span></span></li>
+	<li>三等奖：<span></span></li>
+	<li>四等奖：<span></span></li>
+</ul>
+</body>
+</html>

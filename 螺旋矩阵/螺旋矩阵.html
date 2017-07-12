@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+ul { padding: 0; margin: 10px auto; border: 1px solid #000; border-right: none; border-bottom: none; list-style: none; overflow: hidden; }
+li { border: 1px solid #000; float: left; border-left: none; border-top: none; }
+</style>
+<script type="text/javascript">
+window.onload = function () {
+	var oUl = document.getElementsByTagName('ul')[0];
+	var aLi = oUl.getElementsByTagName('li');
+	var cols = 10;
+	var len = Math.pow(cols, 2);
+	var grid = 40;
+	var col = 0;
+	var row = 0;
+	var min = 0;
+	var max = cols - 1;
+	var step = [];
+	var index = 0;
+
+	init();
+	function init() {
+		createLi();
+		sort();
+		for (var i = 0; i < len; i++) {
+			if (step[i].index % 10 == 0) {
+				move(step[i]);
+			}			
+		}
+/*		var timer = setInterval(function () {
+			for (var i = 0; i < len; i++) {
+				aLi[i].style.background = '';
+			}
+			aLi[step[index]].style.background = 'red';
+			index++;
+			if (index == len) {
+				clearInterval(timer);
+			}
+		}, 50);*/
+	}
+
+	function move(li) {
+		var prev = -1;
+		var timer = null;
+		var index = li.index;
+		timer = setInterval(function () {
+			if (prev >= 0) {
+				step[prev].style.background = '';
+			}
+			step[index].style.background = 'red';
+			prev = index;
+			index++;
+			if (index == len) {
+				index = 0;
+			}
+		}, 200);
+	}
+
+	function sort() {
+		for (var i = 0; i < len; i++) {
+			aLi[row * cols + col].innerHTML = i;
+			aLi[row * cols + col].index = i;
+			step.push(aLi[row * cols + col]);
+			if (row == min && col < max) {
+				col++;
+			} else if (col == max && row < max) {
+				row++;
+			} else if (row == max && col > min) {
+				col--;
+			} else if (col == min && row > min) {
+				row--;
+			}
+			if (row == min + 1 && col == min) {
+				min++;
+				max--;
+			}
+		}
+	}
+
+	function createLi() {
+		var oFragment = document.createDocumentFragment();
+		var oLi = null;
+		for (var i = 0; i < len; i++) {
+			oLi = document.createElement('li');
+			oLi.style.width = grid + 'px';
+			oLi.style.height = grid + 'px';
+			oFragment.appendChild(oLi);
+		}
+		oUl.style.width = cols * (grid + 1) + 'px';
+		oUl.appendChild(oFragment);
+	}
+
+};
+</script>
+</head>
+<body>
+<ul></ul>	
+</body>
+</html>

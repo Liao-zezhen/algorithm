@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+ul { padding: 0; margin: 10px auto; border: 1px solid #000; border-right: none; border-bottom: none; list-style: none; overflow: hidden; }
+li { float: left; border: 1px solid #000; border-left: none; border-top: none; }
+p { text-align: center; }
+.stone { background: blue; }
+.start { background: red; }
+.end { background: green; }
+</style>
+<script type="text/javascript">
+window.onload = function () {
+	var oUl = document.getElementsByTagName('ul')[0];
+	var aLi = oUl.getElementsByTagName('li');
+	var oBtn = document.getElementsByTagName('button')[0];
+	var start = oUl.getElementsByClassName('start');
+	var end = oUl.getElementsByClassName('end');
+
+	var map = [
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	];
+	var cols = Math.sqrt(map.length);
+	var grid = 25;
+	var openArr = [];
+	var closeArr = [];
+
+	init();
+
+	function init() {
+		createMap();
+		oBtn.onclick = function () {
+			openFn();
+		};
+	}
+
+	function openFn() {
+		var now = openArr.shift();
+
+		if (now == end[0]) {
+			showLine();
+			return;
+		}
+
+		closeFn(now);
+		findLi(now);
+
+		openArr.sort(function (a, b) {
+			return a.num - b.num;
+		});
+
+		openFn();
+	}
+	function closeFn(now) {
+		closeArr.push(now);
+	}
+	function findLi(now) {
+		var result = [];
+		for (var i = 0; i < map.length; i++) {
+			if (filter(aLi[i])) {
+				result.push(aLi[i]);
+			}
+		}
+		for (var i = 0; i < result.length; i++) {
+			if ((Math.abs(now.offsetLeft - result[i].offsetLeft) <= grid + 1) && Math.abs(now.offsetTop - result[i].offsetTop) <= grid + 1) {
+				result[i].num = f(result[i]);
+				result[i].parent = now;
+				openArr.push(result[i]);
+			}
+		}
+	}
+	function filter(li) {
+		for (var i = 0; i < closeArr.length; i++) {
+			if (li === closeArr[i]) {
+				return false;
+			}
+		}
+		for (var i = 0; i < openArr.length; i++) {
+			if (li === openArr[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	function showLine() {
+		var result = [];
+		var last = closeArr.pop();
+		var index = 0;
+
+		while (last != start[0]) {
+			result.unshift(last);
+			last = last.parent;
+		}
+
+		var timer = setInterval(function () {
+			result[index].style.background = 'red';
+			index++;
+			if (index == result.length) {
+				clearInterval(timer);
+			}
+		}, 100);
+
+	}
+
+	function createMap() {
+		var oFragment = document.createDocumentFragment();
+		var oLi = null;
+		for (var i = 0; i < map.length; i++) {
+			oLi = document.createElement('li');
+			oLi.style.width = grid + 'px';
+			oLi.style.height = grid + 'px';
+			oFragment.appendChild(oLi);
+			switch (map[i]) {
+				case 1:
+					oLi.className = 'start';
+					openArr.push(oLi);
+					break;
+				case 2:
+					oLi.className = 'end';
+					break;
+				case 3:
+					oLi.className = 'stone';
+					closeArr.push(oLi);
+					break;
+			}
+		}
+		oUl.style.width = cols * (grid + 1) + 'px';
+		oUl.appendChild(oFragment);
+	}
+
+	function f(n) {
+		return g(n) + h(n);
+	}
+	function g(n) {
+		var x = n.offsetLeft - start[0].offsetLeft;
+		var y = n.offsetTop - start[0].offsetTop;
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	}
+	function h(n) {
+		var x = end[0].offsetLeft - n.offsetLeft;
+		var y = end[0].offsetTop - n.offsetTop;
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	}
+
+};
+</script>
+</head>
+<body>
+<ul></ul>
+<p><button>Btn</button></p>
+</body>
+</html>

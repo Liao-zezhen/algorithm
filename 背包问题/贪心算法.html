@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+var W = 16;
+
+var M = 5;
+var arrP = [4, 5, 10, 11, 11];
+var arrW = [3, 4, 7, 8, 9];
+console.log(package(W, M, arrP, arrW));
+/*function package(W, M, arrP, arrW) {
+	var result = [];
+	for (var i = 0; i <= M; i++) {
+		result[i] = [];
+		for (var j = 0; j <= W; j++) {
+			if (i == 0) {
+				result[i][j] = 0;
+			} else if (arrW[i - 1] > j) {
+				result[i][j] = result[i - 1][j];
+			} else {
+				result[i][j] = Math.max(arrP[i - 1] + result[i - 1][j - arrW[i - 1]], result[i - 1][j]);
+			}
+		}
+	}
+	return result;
+}*/
+function package(W, M, arrP, arrW) {
+	var container = [];
+	var result = 0;
+	for (var i = 0; i < M; i++) {
+		container.push({w: arrW[i], p: arrP[i], r: arrP[i] / arrW[i]});
+	}
+	container.sort(function (a, b) {
+		return b.r - a.r;
+	});
+	for (var i = 0; i < M; i++) {
+		if (container[i].w <= W) {
+			result += container[i].p;
+			W -= container[i].w;
+		} else {
+			result += W * container[i].r;
+			break;
+		}
+	}
+	
+	return result.toFixed(2);
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>

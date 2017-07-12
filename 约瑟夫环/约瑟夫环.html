@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+function Node(element) {
+	this.element = element;
+	this.next = null;
+}
+function LinkedList() {
+	this.head = new Node('head');
+	this.head.next = this.head;
+	this.length = 0;
+}
+LinkedList.prototype.find = function (item) {
+	var currNode = this.head;
+	while (currNode.element != item && currNode.next && currNode.next.element != this.head.element) {
+		currNode = currNode.next;
+	}
+	return currNode;
+};
+LinkedList.prototype.findPrevious = function (item) {
+	var currNode = this.head;
+	while (currNode.next && currNode.next.element != item && currNode.next.element != this.head.element) {
+		currNode = currNode.next;
+	}
+	return currNode;
+};
+LinkedList.prototype.display = function () {
+	var currNode = this.head;
+	var result = [];
+	while (currNode.next && currNode.next.element != this.head.element) {
+		result.push(currNode.next.element);
+		currNode = currNode.next;
+	}
+	return result;
+};
+LinkedList.prototype.insert = function (newElement, item) {
+	var newNode = new Node(newElement);
+	var currNode = this.find(item);
+	newNode.next = currNode.next;
+	currNode.next = newNode;
+	this.length++;
+};
+LinkedList.prototype.remove = function (item) {
+	if (item == this.head.element) {
+		return;
+	}
+	var prevNode = this.findPrevious(item);
+	var currNode = this.find(item);
+	if (prevNode != currNode) {
+		prevNode.next = currNode.next;
+		this.length--;
+	}
+};
+killGame(41, 3);
+function killGame(sum, step) {
+	var people = new LinkedList();
+	for (var i = 1; i <= sum; i++) {
+		people.insert(i);
+	}
+	var now = 0;
+	var mark = 'head';
+	var removeMark = '';
+
+	(function () {
+		if (people.length < step) {
+			return;
+		}
+		now++;
+
+		mark = people.find(mark).next.element;
+		if (mark == 'head') {
+			mark = people.find(mark).next.element;
+		}
+
+		if (now == step) {
+			removeMark = mark;
+			mark = people.findPrevious(mark).element;
+			people.remove(removeMark);
+			now = 0;
+		}
+		arguments.callee();
+	})();
+
+	console.log(people.display());
+
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>

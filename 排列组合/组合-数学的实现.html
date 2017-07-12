@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+console.log(c(3, 3));
+function c(m, n) {
+	return f(m) / (f(m - n) * f(n));
+}
+function f(n) {
+	return n <= 1 ? 1 : n * f(n - 1);
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>

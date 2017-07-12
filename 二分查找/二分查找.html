@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+var num = 1000;
+var temp = Math.ceil(Math.random() * num);
+var arr = [];
+for (var i = 1; i <= num; i++) {
+	arr.push(i);
+}
+console.log(search(arr, temp));
+function search(arr, random) {
+	var first = 0;
+	var last = arr.length - 1;
+	var medium;
+	while (first <= last) {
+		medium = Math.floor((first + last) / 2);
+		if (random < arr[medium]) {
+			last = medium - 1;
+		} else if (random > arr[medium]) {
+			first = medium + 1;
+		} else {
+			return arr[medium];
+		}
+	}
+	return arr[medium];
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>

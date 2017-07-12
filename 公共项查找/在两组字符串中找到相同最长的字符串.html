@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+// 在两组字符串中找到相同最长的字符串。
+var arr = ['fsafrevstringewrwef', 'sfsddastringferfrev'];
+
+console.log(equalItem(arr));
+function equalItem(arr) {
+	var str0 = arr[0];
+	var str1 = arr[1];
+	var k;
+	var count = 0;
+	var index = 0;
+
+	for (var i = 0; i < str0.length; i++) {
+		for (var j = 0; j < str1.length; j++) {
+			if (str0.charAt(i) == str1.charAt(j)) {
+				k = 0;
+				while (str0.charAt(i + k) == str1.charAt(j + k)) {
+					k++;
+					if (count < k) {
+						count = k;
+						index = i;
+					}
+				}
+			}
+		}
+	}
+
+	return str0.substr(index, count);
+
+}
+
+</script>
+</head>
+<body>
+	
+</body>
+</html>

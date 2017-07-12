@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body { background: #000; }
+ul { margin: 10px auto; padding: 0; border: 1px solid #333; border-right: none; border-bottom: none; overflow: hidden; list-style: none; background: url(img/bg.jpg) no-repeat; -webkit-background-size: cover; background-size: cover; }
+li { float: left; border: 1px solid #333; border-left: none; border-top: none; -webkit-background-size: cover; background-size: cover; background-repeat: no-repeat; }
+.on { animation: flash .5s linear infinite; }
+@keyframes flash {
+	0% {
+		opacity: 0.1;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+</style>
+<script type="text/javascript">
+window.onload = function () {
+	var oUl = document.getElementsByTagName('ul')[0],
+		aLi = oUl.getElementsByTagName('li'),
+		grid = 50,
+		cols = 8,
+		len = Math.pow(cols, 2),
+		count = 0,
+		items = [],
+		all = [];
+
+	init();
+	function init() {
+		createGrid();
+		setQueen();
+		flash();
+	}
+
+	function createGrid() {
+		var oFragment = document.createDocumentFragment();
+		var oLi = null;
+		for (var i = 0; i < len; i++) {
+			oLi = document.createElement('li');
+			oLi.index = -1;
+			oLi.style.width = grid + 'px';
+			oLi.style.height = grid + 'px';
+			oFragment.appendChild(oLi);
+		}
+		oUl.style.width = cols * (grid + 1) + 'px';
+		oUl.appendChild(oFragment);
+		for (var i = 0; i < cols; i++) {
+			for (var j = 0; j < cols; j++) {
+				aLi[cols * i + j].x = j;
+				aLi[cols * i + j].y = i;
+			}
+		}
+	}
+
+	function setQueen(iQueen) {
+		var iQueen = iQueen || 0;
+		if (iQueen == cols) {
+			all.push(items.concat());
+			count++;
+			return;
+		}
+		var now = null,
+			x = 0,
+			y = 0;
+		for (var i = 0; i < cols; i++) {
+			now = aLi[iQueen * cols + i];
+			if (now.index == -1) {
+				items.push(now);
+				x = now.x;
+				y = now.y;
+
+				for (var j = 0; j < len; j++) {
+					if (aLi[j].index == -1 && (aLi[j].x == x || aLi[j].y == y || aLi[j].x - aLi[j].y == x - y || aLi[j].x + aLi[j].y == x + y)) {
+						aLi[j].index = iQueen;
+					}
+				}
+
+				setQueen(iQueen + 1);
+
+				items.pop();
+				for (var j = 0; j < len; j++) {
+					if (aLi[j].index == iQueen) {
+						aLi[j].index = -1;
+					}
+				}
+
+			}
+		}
+	}
+
+	function flash() {
+		var index = 0,
+			length = all.length,
+			items = null,
+			flashCore = function () {
+				for (var i = 0; i < len; i++) {
+					aLi[i].style.backgroundImage = '';
+					aLi[i].className = '';
+					aLi[i].style.animationDelay = '0s';
+				}
+				items = all[Math.floor(Math.random() * length)];
+				for (var i = 0; i < items.length; i++) {
+					items[i].style.backgroundImage = 'url(img/' + Math.ceil(Math.random() * 12) + '.jpg)';
+					items[i].className = 'on';
+					items[i].style.animationDelay = -Math.random()*2 + 's';
+				}
+			};
+		flashCore();
+		setInterval(flashCore, 2000);
+	}
+
+
+};
+</script>
+</head>
+<body>
+<ul></ul>
+</body>
+</html>

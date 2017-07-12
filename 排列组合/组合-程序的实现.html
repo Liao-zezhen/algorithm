@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+var arr = ['a', 'b', 'c'];
+
+console.log(join(arr, 2));
+
+function join(arr, step) {
+	var result = 0;
+	var resultArr = [];
+
+	if (step == 1) {
+		arr.push(arr.length);
+		return arr;
+	}
+
+	(function (arr, step, thumb) {
+		var items = null;
+		var thumb = thumb || '';
+
+		for (var i = 0; i < arr.length; i++) {
+			items = arr.concat();
+			items.thumb = thumb + items.splice(i, 1);
+			if (step == 2) {
+				result += items.length;
+				for (var j = 0; j < items.length; j++) {
+					resultArr.push(items.thumb + items[j]);
+				}
+			} else {
+				arguments.callee(items, step - 1, items.thumb);
+			}
+		}
+	})(arr, step);
+
+	resultArr = unique(resultArr);
+	function unique(arr) {
+		var container = {};
+		var newArr = [];
+		for (var i = 0; i < arr.length; i++) {
+			arr[i] = arr[i].split('').sort().join('');
+			if (!container[arr[i]]) {
+				newArr.push(arr[i]);
+				container[arr[i]] = 1;
+			}
+		}
+		return newArr;
+	}
+
+	resultArr.push(resultArr.length);
+	return resultArr;
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>

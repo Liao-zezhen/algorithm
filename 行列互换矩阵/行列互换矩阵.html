@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+	ul { padding: 0; margin: 10px auto; list-style: none; background: #141414; overflow: hidden; }
+	li { float: left; background-repeat: no-repeat; color: #fff; }
+	.box0 { background-image: url(img/1.jpg); }
+	.box1 { background-image: url(img/2.jpg); }
+	.box2 { background-image: url(img/3.jpg); }
+	.box3 { background-image: url(img/4.jpg); }
+	.box4 { background-image: url(img/5.jpg); }
+	.box5 { background-image: url(img/6.jpg); }
+</style>
+<script type="text/javascript">
+window.onload = function () {
+	var oUl = document.getElementsByTagName('ul')[0];
+	var aLi = oUl.getElementsByTagName('li');
+	var grid = 70;
+	var cols = 7;
+	var len = Math.pow(cols, 2);
+
+	init();
+	function init() {
+		createGrid();
+		findItem();
+	}
+
+	function findItem() {
+		var result = [];
+
+		items(aLi);
+		items(rowToCol(aLi));
+
+		console.log(result);
+
+		for (var i = 0; i < len; i++) {
+			aLi[i].style.opacity = 0.3;
+		}
+		for (var i = 0; i < result.length; i++) {
+			result[i].style.opacity = 1;
+		}
+
+		function items(arr) {
+			var prev = arr[0];
+			var count = 0;
+
+			for (var i = 0; i < len; i++) {
+				if (prev.className == arr[i].className && i % cols) {
+					count++;
+				} else {
+					if (count >= 2) {
+						for (var j = 0; j <= count; j++) {
+							if (unique(arr[i - 1 - j])) {
+								result.unshift(arr[i - 1 - j]);
+							}
+						}
+					}
+					count = 0;
+				}
+				prev = arr[i];
+			}
+		}
+		function unique(li) {
+			for (var i = 0; i < result.length; i++) {
+				if (result[i] == li) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	function rowToCol(arr) {
+		var result = [];
+		var len = arr.length;
+		var cols = Math.sqrt(len);
+		for (var i = 0; i < len; i++) {
+			result[i % cols * cols + Math.floor(i / cols)] = arr[i];
+		}
+		return result;
+	}
+
+/*	function rowToCol(arr) {
+		var result = [];
+		var len = arr.length;
+		var cols = Math.sqrt(len);
+		var index = 0;
+
+		(function () {
+			for (var i = 0; i < len; i++) {
+				if (i % cols == index) {
+					result.push(arr[i]);
+				}
+			}
+			index++;
+			if (index == cols) {
+				return;
+			}
+			arguments.callee();
+		})();
+
+		return result;
+	}*/
+
+	function createGrid() {
+		var oFragment = document.createDocumentFragment();
+		var oLi = null;
+		for (var i = 0; i < len; i++) {
+			oLi = document.createElement('li');
+			oLi.style.width = grid + 'px';
+			oLi.style.height = grid + 'px';
+			oLi.className = 'box' + Math.floor(Math.random() * 6);
+			oFragment.appendChild(oLi);
+		}
+		oUl.style.width = cols * grid + 'px';
+		oUl.appendChild(oFragment);
+	}
+};
+</script>
+</head>
+<body>
+	<ul></ul>
+</body>
+</html>

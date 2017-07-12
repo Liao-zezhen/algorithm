@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+// 在多组字符串中找到相同最长的字符串。
+var arr = ['fcdshellowqeq', 'hgnghellouyi', 'fdghellofdg', 'dfhghelloere'];
+console.log(equalItem(arr));
+function equalItem(arr) {
+	arr.sort(function (a, b) {
+		return a.length - b.length;
+	});
+	var firstStr = arr.shift();
+	var whole = [];
+	var reg = null;
+	var items = [];
+	var item = null;
+	var result = '';
+	var count = 0;
+
+	for (var i = 0; i < firstStr.length; i++) {
+		for (var j = i + 1; j <= firstStr.length; j++) {
+			whole.push(firstStr.substring(i, j));
+		}
+	}
+	for (var i = 0; i < whole.length; i++) {
+		items = [];
+		reg = new RegExp(whole[i]);
+		for (var j = 0; j < arr.length; j++) {
+			if (item = arr[j].match(reg)) {
+				items = items.concat(item);
+			}
+		}
+		if (items.length == arr.length) {
+			if (count < items[0].length) {
+				count = items[0].length;
+				result = items[0];
+			}
+		}
+	}
+	return result;
+}
+</script>
+</head>
+<body>
+	
+</body>
+</html>
